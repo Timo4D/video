@@ -1,0 +1,43 @@
+POST http://localhost:8080/videos
+Content-Type: application/json
+
+{
+  "title": "Terminator",
+  "ageRating": "16",
+  "description": "Cyborg kommt asu Zukunft und macht ärger",
+  "genre": "Action"
+}
+
+###
+POST http://localhost:8080/videos
+Content-Type: application/json
+
+{
+"title": "Security",
+"ageRating": "18",
+"description": "Marine macht Krawall",
+"genre": "Romantik"
+}
+
+###
+POST http://localhost:8080/videos
+Content-Type: application/json
+
+{
+  "title": "Yesterday",
+  "ageRating": "18",
+  "description": "Action aus der Vergangenheit",
+  "genre": "Action"
+}
+
+
+###
+PUT http://localhost:8080/videos/Security
+Content-Type: application/json
+
+{
+  "title": "Security",
+  "ageRating": "16",
+  "description": "Marine rettet alle in Kaufhaus",
+  "genre": "Action/Romantik"
+}
