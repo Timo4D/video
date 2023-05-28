@@ -1,24 +1,28 @@
 package fh.aalen.video.video;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 public class VideoController {
 
     @Autowired
     VideoService videoService;
 
     @RequestMapping("/videos")
-    public List<Video> getVideoList() {
-        return videoService.getVideoList();
+    public String getVideoList(Model model) {
+        model.addAttribute("videos", videoService.getVideoList());
+        return "videos";
     }
 
     @RequestMapping("/videos/{title}")
-    public Video getVideo(@PathVariable String title) {
-        return videoService.getVideo(title);
+    public String getVideo(@PathVariable String title, Model model) {
+        model.addAttribute("videos", videoService.getVideo(title));
+        return "videos";
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/videos")
