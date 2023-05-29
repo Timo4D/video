@@ -1,4 +1,6 @@
 package fh.aalen.video.person;
 
-public interface PersonRepository {
+import org.springframework.data.repository.ListCrudRepository;
+
+public interface PersonRepository extends ListCrudRepository<Person, Long> {
 }
