@@ -3,12 +3,17 @@ package fh.aalen.video.blackbox;
 import fh.aalen.video.person.Person;
 import fh.aalen.video.video.Video;
 import fh.aalen.video.video.VideoController;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.sql.Date;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import org.springframework.dao.DataIntegrityViolationException;
 
 @SpringBootTest
 public class BlackboxTests {
@@ -47,18 +52,21 @@ public class BlackboxTests {
   }
 
   @Test
-  void testLongInput() {
+void testLongInput() {
     String longString = new String(new char[1000]).replace("\0", "a");
+  
+    // Ausnahme wird erwartet
+    assertThrows(DataIntegrityViolationException.class, () -> {
+        // Versuche das Video hinzuzufügen
+        videoController.addVideo(
+          new Video(longString, longString, longString, longString)
+        );
+    }, "Es sollte eine DataIntegrityViolationException geworfen werden");
 
-    // Versuche das Video hinzuzufügen
-    videoController.addVideo(
-      new Video(longString, longString, longString, longString)
-    );
-
-    // Versuche das hinzugefügte Video abzurufen
+    // Hier ist kein Video hinzugefügt, deshalb sollte nichts zurückgegeben werden
     Video video = videoController.getVideo(longString);
-    Assertions.assertNotNull(video, "Video sollte nicht null sein");
-  }
+    Assertions.assertNull(video, "Video sollte null sein");
+}
 
   @Test
   public void testPersonSurname() {
