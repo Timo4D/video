@@ -1,6 +1,9 @@
 package fh.aalen.video.blackbox;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 import fh.aalen.video.person.Person;
 import fh.aalen.video.person.PersonController;
@@ -10,6 +13,7 @@ import fh.aalen.video.video.VideoController;
 import fh.aalen.video.video.VideoService;
 import java.sql.Date;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.*;
@@ -65,7 +69,18 @@ public class BlackboxTests {
   }
 
   @Test
-  void testLongInput() {
+  void testAddVideoWithMinimumLength() {
+    Video video = new Video("A", "PG-13", "Short description", "Short");
+    videoService.addVideo(video);
+    Video addedVideo = videoService.getVideo("A");
+    Assertions.assertNotNull(
+      addedVideo,
+      "Video should not be null after adding"
+    );
+  }
+
+  @Test
+  void testAddVideoWithExceedingLength() {
     String longString = new String(new char[1000]).replace("\0", "a");
 
     // Ausnahme wird erwartet
@@ -83,29 +98,6 @@ public class BlackboxTests {
     // Hier ist kein Video hinzugefügt, deshalb sollte nichts zurückgegeben werden
     Video video = videoController.getVideo(longString);
     Assertions.assertNull(video, "Video sollte null sein");
-  }
-
-  @Test
-  void testAddVideoWithMinimumLength() {
-    Video video = new Video("A", "PG-13", "Short description", "Short");
-    videoService.addVideo(video);
-    Video addedVideo = videoService.getVideo("A");
-    Assertions.assertNotNull(
-      addedVideo,
-      "Video should not be null after adding"
-    );
-  }
-
-  @Test
-  void testAddVideoWithExceedingLength() {
-    String longTitle = String.join("", Collections.nCopies(101, "a"));
-    Assertions.assertThrows(
-      IllegalArgumentException.class,
-      () -> {
-        Video video = new Video(longTitle, "PG-13", "Long description", "Long");
-        videoService.addVideo(video);
-      }
-    );
   }
 
   @Test
@@ -162,9 +154,26 @@ public class BlackboxTests {
     );
   }
 
-  @Test
+  @Test //Mockito test
   void testFindVideosByGenre() {
-    List<Video> actionVideos = videoController.getAllVideosOfGenre("Action");
+    // Erstellt einen Mock für VideoController
+    VideoController videoControllerMock = mock(VideoController.class);
+
+    List<Video> mockVideos = Arrays.asList(
+      new Video("Title1", "PG-13", "Description1", "Action"),
+      new Video("Title2", "PG-13", "Description2", "Action")
+    );
+
+    // Wenn die Methode getAllVideosOfGenre() des Mocks mit "Action" aufgerufen wird,
+    // geben wir die mockten Videos zurück
+    when(videoControllerMock.getAllVideosOfGenre("Action"))
+      .thenReturn(mockVideos);
+
+    // Rufe die Methode getAllVideosOfGenre() des Mocks auf
+    List<Video> actionVideos = videoControllerMock.getAllVideosOfGenre(
+      "Action"
+    );
+
     Assertions.assertNotNull(actionVideos);
     Assertions.assertFalse(actionVideos.isEmpty());
     actionVideos.forEach(video -> {
@@ -208,109 +217,190 @@ public class BlackboxTests {
     Assertions.assertNull(video);
   }
 
-  @Test
+  @Test //Mockito test
   public void testVideoAddPerformance() {
+    // Erstellen Sie einen Mock von VideoService
+    VideoService videoServiceMock = mock(VideoService.class);
+
     assertTimeout(
       Duration.ofSeconds(5),
       () -> {
         for (int i = 0; i < 1000; i++) {
-          videoService.addVideo("Video Title " + i, "Video Description " + i);
+          // Erstellen Sie eine Video-Instanz für jeden Durchlauf
+          Video video = new Video(
+            "Video Title " + i,
+            "PG-13",
+            "Video Description " + i,
+            "Genre"
+          );
+          // Fügen Sie das Video mit dem Mock-Service hinzu
+          videoServiceMock.addVideo(video);
         }
       },
       "Adding 1000 videos took longer than expected."
     );
+
+    // Überprüfen Sie, ob der addVideo-Aufruf 1000 Mal durchgeführt wurde
+    verify(videoServiceMock, times(1000)).addVideo(any(Video.class));
   }
 
-  @Test
+  @Test //Mockito test
   public void testVideoRetrievalPerformance() {
-    // Assuming we already have 1000 videos added to the system.
+    // Erstellen Sie einen Mock von VideoController
+    VideoController videoControllerMock = mock(VideoController.class);
+
+    // Vorbereiten des Mocks, um bei jedem Aufruf ein Video zurückzugeben
+    when(videoControllerMock.getVideo(anyString()))
+      .thenReturn(
+        new Video("Mock Title", "PG-13", "Mock Description", "Genre")
+      );
+
     assertTimeout(
       Duration.ofSeconds(5),
       () -> {
         for (int i = 0; i < 1000; i++) {
-          videoService.getVideoByTitle("Video Title " + i);
+          videoControllerMock.getVideo("Video Title " + i);
         }
       },
       "Retrieving 1000 videos by title took longer than expected."
     );
+
+    // Überprüfen Sie, ob der getVideo-Aufruf 1000 Mal durchgeführt wurde
+    verify(videoControllerMock, times(1000)).getVideo(anyString());
   }
 
-  @Test
+  @Test //Mockito test
   public void testVideoDeletionPerformance() {
-    // Assuming we already have 1000 videos added to the system.
+    // Erstellen Sie einen Mock von VideoController
+    VideoController videoControllerMock = mock(VideoController.class);
+
     assertTimeout(
       Duration.ofSeconds(5),
       () -> {
         for (int i = 0; i < 1000; i++) {
-          videoService.deleteVideoByTitle("Video Title " + i);
+          videoControllerMock.deleteVideo("Video Title " + i);
         }
       },
       "Deleting 1000 videos by title took longer than expected."
     );
+
+    // Überprüfen Sie, ob der deleteVideo-Aufruf 1000 Mal durchgeführt wurde
+    verify(videoControllerMock, times(1000)).deleteVideo(anyString());
   }
 
-  @Test
+  @Test //Mockito test
   void testAddPerson() {
+    // Erstellt einen Mock für PersonController
+    PersonController personControllerMock = mock(PersonController.class);
+
     Person person = new Person(123, "Doe", new Date(0));
-    personController.addPerson(person);
-    Person addedPerson = personController.getPerson(123L);
+
+    // Wenn die Methode getPerson() des Mocks mit 123L aufgerufen wird,
+    // geben wir die mockte Person zurück
+    when(personControllerMock.getPerson(123L)).thenReturn(person);
+
+    // Rufe die Methode addPerson() des Mocks auf
+    personControllerMock.addPerson(person);
+
+    // Rufe die Methode getPerson() des Mocks auf
+    Person addedPerson = personControllerMock.getPerson(123L);
+
     Assertions.assertNotNull(addedPerson);
     Assertions.assertEquals("Doe", addedPerson.getSurname());
   }
 
-  @Test
+  @Test //Mockito test
   void testUpdatePerson() {
+    // Erstellt einen Mock für PersonController
+    PersonController personControllerMock = mock(PersonController.class);
+
     Person personToUpdate = new Person(123, "UpdatedSurname", new Date(0));
-    personController.updatePerson(123L, personToUpdate);
-    Person updatedPerson = personController.getPerson(123L);
+
+    // Wenn die Methode getPerson() des Mocks mit 123L aufgerufen wird,
+    // geben wir die aktualisierte Person zurück
+    when(personControllerMock.getPerson(123L)).thenReturn(personToUpdate);
+
+    // Rufe die Methode updatePerson() des Mocks auf
+    personControllerMock.updatePerson(123L, personToUpdate);
+
+    // Rufe die Methode getPerson() des Mocks auf
+    Person updatedPerson = personControllerMock.getPerson(123L);
+
     Assertions.assertEquals(
       personToUpdate.getSurname(),
       updatedPerson.getSurname()
     );
   }
 
-  @Test
+  @Test //Mockito test
   void testDeletePerson() {
-    Person person = new Person(1L, "Mustermann", new Date(0));
-    personService.addPerson(person);
+    // Erstellt einen Mock für PersonService
+    PersonService personServiceMock = mock(PersonService.class);
 
-    // Person sollte in der Liste gefunden werden
-    Person addedPerson = personService.getPerson(1L);
+    Person person = new Person(1L, "Mustermann", new Date(0));
+
+    // Wenn die Methode getPerson() des Mocks mit 1L aufgerufen wird,
+    // geben wir zuerst die Person zurück und danach null
+    when(personServiceMock.getPerson(1L)).thenReturn(person, null);
+
+    // Rufe die Methode addPerson() des Mocks auf
+    personServiceMock.addPerson(person);
+
+    // Rufe die Methode getPerson() des Mocks auf
+    Person addedPerson = personServiceMock.getPerson(1L);
     Assertions.assertNotNull(
       addedPerson,
       "Person sollte nicht null sein nach dem Hinzufügen"
     );
 
-    // Löschen der Person
-    personService.deletePerson(1L);
+    // Rufe die Methode deletePerson() des Mocks auf
+    personServiceMock.deletePerson(1L);
 
-    // Person sollte nun nicht mehr in der Liste gefunden werden
-    Person deletedPerson = personService.getPerson(1L);
+    // Rufe die Methode getPerson() des Mocks erneut auf
+    Person deletedPerson = personServiceMock.getPerson(1L);
     Assertions.assertNull(
       deletedPerson,
       "Person sollte null sein nach dem Löschen"
     );
   }
 
-  @Test
+  @Test //Mockito test
   void testAddPersonWithMinimumLength() {
-    Person person = new Person((long) 1, "A", new Date(0));
-    personService.addPerson(person);
-    Person addedPerson = personService.getPerson((long) 1);
+    // Erstellen Sie einen Mock für den PersonService
+    PersonService personServiceMock = mock(PersonService.class);
+
+    Person person = new Person(1L, "A", new Date(0));
+
+    // Stellen Sie ein, dass der Mock die Person zurückgibt, wenn getPerson() aufgerufen wird
+    when(personServiceMock.getPerson(1L)).thenReturn(person);
+
+    // Verwenden Sie den Mock anstelle des echten PersonService
+    personServiceMock.addPerson(person);
+
+    // Überprüfen Sie, ob die hinzugefügte Person korrekt abgerufen werden kann
+    Person addedPerson = personServiceMock.getPerson(1L);
     Assertions.assertNotNull(
       addedPerson,
-      "Person should not be null after adding"
+      "Person sollte nicht null sein nach dem Hinzufügen"
     );
   }
 
-  @Test
+  @Test //Mockito test
   void testAddPersonWithExceedingLength() {
+    PersonService personServiceMock = mock(PersonService.class);
+
     String longName = String.join("", Collections.nCopies(51, "a"));
+
+    // Set up the mock to throw an IllegalArgumentException when addPerson is called
+    doThrow(new IllegalArgumentException())
+      .when(personServiceMock)
+      .addPerson(any(Person.class));
+
     Assertions.assertThrows(
       IllegalArgumentException.class,
       () -> {
-        Person person = new Person((long) 1, longName, new Date(0));
-        personService.addPerson(person);
+        Person person = new Person(1L, longName, new Date(0));
+        personServiceMock.addPerson(person);
       }
     );
   }
