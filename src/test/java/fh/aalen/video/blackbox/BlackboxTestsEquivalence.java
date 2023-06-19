@@ -29,7 +29,7 @@ public class BlackboxTestsEquivalence {
   @Autowired
   private VideoService videoService = new VideoService();
 
-  @Test
+  @Test // tests added video with four equal number-Strings
   void testNumberInput() {
     videoController.addVideo(
       new Video("123456789", "123456789", "123456789", "123456789")
@@ -38,21 +38,21 @@ public class BlackboxTestsEquivalence {
     Assertions.assertNotNull(video, "Video sollte nicht null sein");
   }
 
-  @Test
+  @Test // tests added video with four equal Umlaut-Strings
   void testUmlautInput() {
     videoController.addVideo(new Video("üäö", "üäö", "üäö", "üäö"));
     Video video = videoController.getVideo("üäö");
     Assertions.assertNotNull(video, "Video sollte nicht null sein");
   }
 
-  @Test
+  @Test // tests added video with four equal special character-Strings
   void testSpecialCharInput() {
     videoController.addVideo(new Video("@$%^&*", "@$%^&*", "@$%^&*", "@$%^&*"));
     Video video = videoController.getVideo("@$%^&*");
     Assertions.assertNotNull(video, "Video sollte nicht null sein");
   }
 
-  @Test
+  @Test // tests added video
   void testAddVideo() {
     Video video = new Video("Star Wars", "PG-13", "A space opera", "Sci-Fi");
     videoService.addVideo(video);
@@ -64,7 +64,7 @@ public class BlackboxTestsEquivalence {
     );
   }
 
-  @Test
+  @Test // tests to update a video
   void testUpdateVideo() {
     Video videoToUpdate = new Video(
       "Security Test",
@@ -80,14 +80,14 @@ public class BlackboxTestsEquivalence {
     );
   }
 
-  @Test
+  @Test // tests to delete a video
   void testDeleteVideo() {
     videoController.deleteVideo("Security Test");
     Video video = videoController.getVideo("Security Test");
     Assertions.assertNull(video);
   }
 
-  @Test
+  @Test // tests to set a video title
   public void testVideoTitle() {
     Video video = new Video();
     String title = "This is a test title";
@@ -101,7 +101,7 @@ public class BlackboxTestsEquivalence {
     );
   }
 
-  @Test
+  @Test //tests to set a video age rating
   public void testVideoAgeRating() {
     String ageRating = "16";
     Video video = new Video("Test Title", ageRating, "A test video", "Action");
@@ -113,7 +113,7 @@ public class BlackboxTestsEquivalence {
     );
   }
 
-  @Test
+  @Test // tests to set a video description
   public void testVideoDescription() {
     Video video = new Video();
     String description = "This is a test description";
@@ -127,7 +127,7 @@ public class BlackboxTestsEquivalence {
     );
   }
 
-  @Test
+  @Test // tests to set a video genre
   public void testVideoGenre() {
     Video video = new Video();
     String genre = "This is a test genre";
@@ -141,7 +141,7 @@ public class BlackboxTestsEquivalence {
     );
   }
 
-  @Test
+  @Test // tests to set a person id
   public void testPersonId() {
     Person person = new Person();
     long id = 123000;
@@ -155,7 +155,7 @@ public class BlackboxTestsEquivalence {
     );
   }
 
-  @Test
+  @Test // tests to set a person surname
   public void testPersonSurname() {
     Person person = new Person();
     String surname = "Test";
@@ -169,7 +169,7 @@ public class BlackboxTestsEquivalence {
     );
   }
 
-  @Test
+  @Test // tests to set a person birthdate
   public void testPersonBirthdate() {
     Person person = new Person();
     Date birthdate = new Date(2000 - 01 - 01);
@@ -184,7 +184,7 @@ public class BlackboxTestsEquivalence {
   }
 
   //Mockito test
-  @Test
+  @Test //tests to add a person
   void testAddPerson() {
     PersonController personControllerMock = mock(PersonController.class);
 
@@ -201,7 +201,7 @@ public class BlackboxTestsEquivalence {
   }
 
   //Mockito test
-  @Test
+  @Test //tests to update a person
   void testUpdatePerson() {
     PersonController personControllerMock = mock(PersonController.class);
 
@@ -220,7 +220,7 @@ public class BlackboxTestsEquivalence {
   }
 
   //Mockito test
-  @Test
+  @Test //tests to delete a person
   void testDeletePerson() {
     PersonService personServiceMock = mock(PersonService.class);
 
@@ -246,7 +246,7 @@ public class BlackboxTestsEquivalence {
   }
 
   //Mockito test
-  @Test
+  @Test //tests to find videos by genre
   void testFindVideosByGenre() {
     VideoController videoControllerMock = mock(VideoController.class);
 
