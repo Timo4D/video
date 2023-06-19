@@ -33,9 +33,6 @@ public class BlackboxTests {
   private VideoController videoController = new VideoController();
 
   @Autowired
-  private PersonController personController = new PersonController();
-
-  @Autowired
   private VideoService videoService = new VideoService();
 
   @Autowired
@@ -43,6 +40,8 @@ public class BlackboxTests {
 
   private List<Long> createdIds = new ArrayList<>();
 
+
+  //--------Grenzwertanalyse--------
   @Test
   void testNumberInput() { //keine richtigen Zahlen, da als String gespeichert
     videoController.addVideo(
