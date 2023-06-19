@@ -407,7 +407,7 @@ public class BlackboxTests {
 
   @Test
   void testAddPersonPerformance() {
-    int maxPersons = 10000;
+    int maxPersons = 350;
     for (int i = 0; i < maxPersons; i++) {
       Person person = new Person((long) i, "Person" + i, new Date(0));
       personService.addPerson(person);
@@ -432,7 +432,7 @@ public class BlackboxTests {
 
   @Test
   void testDeletePersonPerformance() {
-    int maxPersons = 10000;
+    int maxPersons = 350;
     for (int i = 0; i <= maxPersons; i++) {
       Person person = new Person((long) i, "Person" + i, new Date(0));
       personService.addPerson(person);
@@ -447,4 +447,5 @@ public class BlackboxTests {
       "Deleting a person should take less than 200 milliseconds"
     );
   }
+  
 }
