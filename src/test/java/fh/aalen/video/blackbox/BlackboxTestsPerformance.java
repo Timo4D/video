@@ -40,7 +40,7 @@ public class BlackboxTestsPerformance {
         for (int i = 0; i < 1000; i++) {
           Video video = new Video(
             "Video Title " + i,
-            "PG-13",
+            "12",
             "Video Description " + i,
             "Genre"
           );
@@ -60,9 +60,7 @@ public class BlackboxTestsPerformance {
     VideoController videoControllerMock = mock(VideoController.class);
 
     when(videoControllerMock.getVideo(anyString()))
-      .thenReturn(
-        new Video("Mock Title", "PG-13", "Mock Description", "Genre")
-      );
+      .thenReturn(new Video("Title", "16", "Description", "Genre"));
 
     assertTimeout(
       Duration.ofSeconds(5),
@@ -82,7 +80,7 @@ public class BlackboxTestsPerformance {
   public void testVideoUpdatePerformance() {
     VideoService videoServiceMock = mock(VideoService.class);
 
-    String originalTitle = "Original Title";
+    String originalTitle = "Title";
 
     assertTimeout(
       Duration.ofSeconds(5),
@@ -90,9 +88,9 @@ public class BlackboxTestsPerformance {
         for (int i = 0; i < 1000; i++) {
           Video updatedVideo = new Video(
             originalTitle,
-            "PG-13",
-            "Updated Description " + i,
-            "Updated Genre " + i
+            "18",
+            "Description " + i,
+            "Genre " + i
           );
 
           videoServiceMock.updateVideo(originalTitle, updatedVideo);
@@ -114,7 +112,7 @@ public class BlackboxTestsPerformance {
       Duration.ofSeconds(5),
       () -> {
         for (int i = 0; i < 1000; i++) {
-          videoControllerMock.deleteVideo("Video Title " + i);
+          videoControllerMock.deleteVideo("Title " + i);
         }
       },
       "Deleting 1000 videos by title took longer than expected."

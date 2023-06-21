@@ -31,7 +31,7 @@ public class BlackboxTestsBoundaryValueAnalysis {
   void testAddVideoWithEmptyInput() {
     videoController.addVideo(new Video("", "", "", ""));
     Video video = videoController.getVideo("");
-    Assertions.assertNotNull(video, "Video sollte nicht null sein");
+    Assertions.assertNotNull(video, "Video should not be null after adding");
   }
 
   @Test // tests the boundary value for extremely small input
@@ -79,7 +79,7 @@ public class BlackboxTestsBoundaryValueAnalysis {
   void testAddPersonWithMinimumLength() {
     Person person = new Person();
     person.setSurname("A");
-    person.setBirthdate(new Date(0));
+    person.setBirthdate(new Date(0001 - 01 - 01));
 
     personService.addPerson(person);
 
@@ -99,7 +99,8 @@ public class BlackboxTestsBoundaryValueAnalysis {
 
     Person person = new Person();
     person.setSurname(longString);
-    person.setBirthdate(new Date(0));
+    person.setBirthdate(new Date(999999 - 12 - 31));
+    person.setId(0);
 
     personService.addPerson(person);
 

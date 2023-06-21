@@ -29,39 +29,48 @@ public class BlackboxTestsEquivalence {
   @Autowired
   private VideoService videoService = new VideoService();
 
-  @Test // tests added video with four equal number-Strings
+  @Test // tests to add a video with four equal number-Strings
   void testNumberInput() {
     videoController.addVideo(
       new Video("123456789", "123456789", "123456789", "123456789")
     );
     Video video = videoController.getVideo("123456789");
-    Assertions.assertNotNull(video, "Video sollte nicht null sein");
+    Assertions.assertNotNull(video, "Video should not be null");
   }
 
-  @Test // tests added video with four equal Umlaut-Strings
+  @Test // tests to add a video with four equal Umlaut-Strings
   void testUmlautInput() {
     videoController.addVideo(new Video("üäö", "üäö", "üäö", "üäö"));
     Video video = videoController.getVideo("üäö");
-    Assertions.assertNotNull(video, "Video sollte nicht null sein");
+    Assertions.assertNotNull(video, "Video should not be null");
   }
 
-  @Test // tests added video with four equal special character-Strings
+  @Test // tests to add a video with equal special character-Strings
   void testSpecialCharInput() {
-    videoController.addVideo(new Video("@$%^&*", "@$%^&*", "@$%^&*", "@$%^&*"));
-    Video video = videoController.getVideo("@$%^&*");
-    Assertions.assertNotNull(video, "Video sollte nicht null sein");
+    videoController.addVideo(
+      new Video(
+        "@()[]{}+-/€$%^&*ß",
+        "@()[]{}+-/€$%^&*ß",
+        "@()[]{}+-/€$%^&*ß",
+        "@()[]{}+-/€$%^&*ß"
+      )
+    );
+    Video video = videoController.getVideo("@()[]{}+-/€$%^&*ß");
+    Assertions.assertNotNull(video, "Video should not be null");
   }
 
-  @Test // tests added video
+  @Test // tests to add a normal video
   void testAddVideo() {
-    Video video = new Video("Star Wars", "PG-13", "A space opera", "Sci-Fi");
+    Video video = new Video(
+      "Star Wars",
+      "12",
+      "lightsabers and the force",
+      "Sci-Fi"
+    );
     videoService.addVideo(video);
 
     Video addedVideo = videoService.getVideo("Star Wars");
-    Assertions.assertNotNull(
-      addedVideo,
-      "Video sollte nicht null sein nach dem Hinzufügen"
-    );
+    Assertions.assertNotNull(addedVideo, "Video should not be null");
   }
 
   @Test // tests to update a video
@@ -90,7 +99,7 @@ public class BlackboxTestsEquivalence {
   @Test // tests to set a video title
   public void testVideoTitle() {
     Video video = new Video();
-    String title = "This is a test title";
+    String title = "Test title";
 
     video.setTitle(title);
 
@@ -101,10 +110,33 @@ public class BlackboxTestsEquivalence {
     );
   }
 
+  @Test //tests to set a video without title
+  public void testAddVideoWithoutTitle() {
+    Video video = new Video();
+    String ageRating = "16";
+    String description = "A test video";
+    String genre = "Action";
+
+    video.setAgeRating(ageRating);
+    video.setDescription(description);
+    video.setGenre(genre);
+
+    Assertions.assertNotNull(video, video.getAgeRating());
+
+    Assertions.assertNotNull(video, video.getDescription());
+
+    Assertions.assertNotNull(video, video.getGenre());
+
+    Assertions.assertNotNull(video, video.getTitle());
+  }
+
   @Test //tests to set a video age rating
   public void testVideoAgeRating() {
+    Video video = new Video();
+
     String ageRating = "16";
-    Video video = new Video("Test Title", ageRating, "A test video", "Action");
+
+    video.setAgeRating(ageRating);
 
     Assertions.assertEquals(
       ageRating,
@@ -116,7 +148,7 @@ public class BlackboxTestsEquivalence {
   @Test // tests to set a video description
   public void testVideoDescription() {
     Video video = new Video();
-    String description = "This is a test description";
+    String description = "Test description";
 
     video.setDescription(description);
 
@@ -130,7 +162,7 @@ public class BlackboxTestsEquivalence {
   @Test // tests to set a video genre
   public void testVideoGenre() {
     Video video = new Video();
-    String genre = "This is a test genre";
+    String genre = "Test genre";
 
     video.setGenre(genre);
 
@@ -188,7 +220,7 @@ public class BlackboxTestsEquivalence {
   void testAddPerson() {
     PersonController personControllerMock = mock(PersonController.class);
 
-    Person person = new Person(123, "Doe", new Date(0));
+    Person person = new Person(123L, "Tester", new Date(2004 - 02 - 03));
 
     when(personControllerMock.getPerson(123L)).thenReturn(person);
 
@@ -197,7 +229,7 @@ public class BlackboxTestsEquivalence {
     Person addedPerson = personControllerMock.getPerson(123L);
 
     Assertions.assertNotNull(addedPerson);
-    Assertions.assertEquals("Doe", addedPerson.getSurname());
+    Assertions.assertEquals("Tester", addedPerson.getSurname());
   }
 
   //Mockito test
@@ -205,7 +237,11 @@ public class BlackboxTestsEquivalence {
   void testUpdatePerson() {
     PersonController personControllerMock = mock(PersonController.class);
 
-    Person personToUpdate = new Person(123, "UpdatedSurname", new Date(0));
+    Person personToUpdate = new Person(
+      123L,
+      "UpdatedSurname",
+      new Date(2003 - 11 - 11)
+    );
 
     when(personControllerMock.getPerson(123L)).thenReturn(personToUpdate);
 
@@ -224,7 +260,7 @@ public class BlackboxTestsEquivalence {
   void testDeletePerson() {
     PersonService personServiceMock = mock(PersonService.class);
 
-    Person person = new Person(1L, "Mustermann", new Date(0));
+    Person person = new Person(1L, "Mustermann", new Date(1999 - 03 - 03));
 
     when(personServiceMock.getPerson(1L)).thenReturn(person, null);
 
@@ -233,7 +269,7 @@ public class BlackboxTestsEquivalence {
     Person addedPerson = personServiceMock.getPerson(1L);
     Assertions.assertNotNull(
       addedPerson,
-      "Person sollte nicht null sein nach dem Hinzufügen"
+      "Person should not be null after adding"
     );
 
     personServiceMock.deletePerson(1L);
@@ -241,7 +277,7 @@ public class BlackboxTestsEquivalence {
     Person deletedPerson = personServiceMock.getPerson(1L);
     Assertions.assertNull(
       deletedPerson,
-      "Person sollte null sein nach dem Löschen"
+      "Person should be null after deleting"
     );
   }
 
@@ -251,8 +287,8 @@ public class BlackboxTestsEquivalence {
     VideoController videoControllerMock = mock(VideoController.class);
 
     List<Video> mockVideos = Arrays.asList(
-      new Video("Title1", "PG-13", "Description1", "Action"),
-      new Video("Title2", "PG-13", "Description2", "Action")
+      new Video("Title1", "12", "Description1", "Action"),
+      new Video("Title2", "12", "Description2", "Action")
     );
 
     when(videoControllerMock.getAllVideosOfGenre("Action"))
