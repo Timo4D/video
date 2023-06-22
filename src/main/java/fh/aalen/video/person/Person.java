@@ -3,6 +3,7 @@ package fh.aalen.video.person;
 import fh.aalen.video.video.Video;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,11 +20,13 @@ public class Person {
     private List<Video> favouriteVideos;
 
     public Person() {
+        this.favouriteVideos = new ArrayList<>();
     }
     public Person(long id, String surname, Date birthdate) {
         this.id = id;
         this.surname = surname;
         this.birthdate = birthdate;
+        this.favouriteVideos = new ArrayList<>();
     }
 
     public List<Video> getFavoriteVideos() {
