@@ -17,7 +17,7 @@ import java.util.List;
 @SpringBootTest
 @Transactional
 @Rollback
-public class WhiteBoxTests {
+public class WhiteBoxTests1 {
 
     private Person person;
     private Video video;
