@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+
 @Entity
 public class Person {
     @Id
@@ -18,7 +19,6 @@ public class Person {
     private List<Video> favouriteVideos;
 
     public Person() {
-
     }
     public Person(long id, String surname, Date birthdate) {
         this.id = id;
@@ -57,4 +57,6 @@ public class Person {
     public void setId(long id) {
         this.id = id;
     }
+
 }
+
