@@ -1,4 +1,4 @@
-package fh.aalen.video;
+package selenium;
 
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
