@@ -26,7 +26,7 @@ public class WhiteboxTests {
     public void testPersonConstructor() {
         // Arrange
         long id = 1;
-        String surname = "Doe";
+        String surname = "Test";
         Date birthdate = new Date();
 
         // Act
@@ -78,7 +78,7 @@ public class WhiteboxTests {
     public void testSetSurname() {
         // Arrange
         Person person = new Person();
-        String surname = "Smith";
+        String surname = "Test";
 
         // Act
         person.setSurname(surname);
@@ -88,12 +88,12 @@ public class WhiteboxTests {
     }
 
 
-    @Test // PWBT8GS
+    @Test // PWBT6GS
     public void testPersonGettersAndSetters() {
         Person person = new Person();
 
         long id = 1;
-        String surname = "Smith";
+        String surname = "Test";
         Date birthdate = new Date();
 
 
@@ -108,7 +108,7 @@ public class WhiteboxTests {
 
     }
 
-    @Test // PWBT9A
+    @Test // PWBT7A
     public void testAddVideoToFavorites() {
         Person person = new Person();
         Video video1 = new Video();
@@ -124,7 +124,7 @@ public class WhiteboxTests {
         assertEquals(2, favoriteVideos.size());
     }
 
-    @Test //PWBT10PVR
+    @Test //PWBT8PVR
     public void testPersonVideoRelationship() {
         Person person = new Person();
         Video video1 = new Video();
@@ -141,7 +141,7 @@ public class WhiteboxTests {
 
     }
 
-    @Test // PWBT11PBV
+    @Test // PWBT9PBV
     public void testPersonBoundaryValues() {
         long id = Long.MAX_VALUE;
         String surname = "";
@@ -161,7 +161,7 @@ public class WhiteboxTests {
     public void testGettersAndSetters() {
         // Arrange
         String title = "Test Video";
-        String ageRating = "PG";
+        String ageRating = "R";
         String description = "This is a test video";
         String genre = "Action";
         Video video = new Video();
@@ -183,7 +183,7 @@ public class WhiteboxTests {
     public void testConstructor() {
         // Arrange
         String title = "Test Video";
-        String ageRating = "PG";
+        String ageRating = "R";
         String description = "This is a test video";
         String genre = "Action";
 
@@ -226,7 +226,7 @@ public class WhiteboxTests {
         assertNull(video.getDescription());
 
         // Test the first branch of the setter method for 'ageRating'
-        video.setAgeRating("PG-13");
+        video.setAgeRating("R");
         assertNotNull(video.getAgeRating());
 
         // Test the second branch of the setter method for 'ageRating'
@@ -264,7 +264,7 @@ public class WhiteboxTests {
         assertNull(video.getDescription());
 
         // Test the first branch of the setter method for 'ageRating'
-        video.setAgeRating("PG-13");
+        video.setAgeRating("R");
         assertNotNull(video.getAgeRating());
 
         // Test the second branch of the setter method for 'ageRating'
@@ -293,25 +293,25 @@ public class WhiteboxTests {
         assertTrue(video.getPersonFavorites().contains(person2));
     }
 
-    @Test //VWBT7EC
+    @Test //VWBT6EC
     public void testEmptyConstructor() {
         // Create a Video object using the empty constructor
         Video video = new Video();
 
         // Set values using setters
-        video.setTitle("Sample Title");
-        video.setAgeRating("PG-13");
-        video.setDescription("Sample description");
+        video.setTitle("Title");
+        video.setAgeRating("R");
+        video.setDescription("Description");
         video.setGenre("Action");
 
         // Use getters to retrieve values and assert they match
-        Assertions.assertEquals("Sample Title", video.getTitle());
-        Assertions.assertEquals("PG-13", video.getAgeRating());
-        Assertions.assertEquals("Sample description", video.getDescription());
+        Assertions.assertEquals("Title", video.getTitle());
+        Assertions.assertEquals("R", video.getAgeRating());
+        Assertions.assertEquals("Description", video.getDescription());
         Assertions.assertEquals("Action", video.getGenre());
     }
 
-    @Test //VWBT8DC
+    @Test //VWBT7DC
     public void testDefaultConstructor() {
         // Create a Video object using the default constructor
         Video video = new Video();
@@ -324,7 +324,7 @@ public class WhiteboxTests {
         Assertions.assertNull(video.getPersonFavorites());
     }
 
-    @Test //VWBT10NN
+    @Test //VWBT8NN
     public void testGenreNotNull() {
         // Create a Video object
         Video video = new Video();
@@ -338,7 +338,7 @@ public class WhiteboxTests {
     }
 
 
-    @Test //VWBT11PVEL
+    @Test //VWBT9PVEL
     public void testPersonFavoritesEmptyList() {
         // Create a Video object
         Video video = new Video();
@@ -353,7 +353,7 @@ public class WhiteboxTests {
         Assertions.assertTrue(video.getPersonFavorites().isEmpty());
     }
 
-    @Test //VWBT12PVNL
+    @Test //VWBT10PVNL
     public void testPersonFavoritesNullList() {
         // Create a Video object
         Video video = new Video();
