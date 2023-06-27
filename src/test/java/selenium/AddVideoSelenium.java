@@ -18,8 +18,6 @@ public class AddVideoSelenium {
     @BeforeEach
     public void setup() {
         driver = new ChromeDriver();
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
     @Test
@@ -36,22 +34,32 @@ public class AddVideoSelenium {
         // Fill the form
         String testTitle = "Test Title";
         title.sendKeys(testTitle);
-        description.sendKeys("Test Description");
-        ageRating.sendKeys("Test Age Rating");
-        genre.sendKeys("Test Genre");
+
+        String testDescription = "Test Description";
+        description.sendKeys(testDescription);
+
+        String testAgeRating = "Test Age Rating";
+        ageRating.sendKeys(testAgeRating);
+
+        String testGenre = "Test Genre";
+        genre.sendKeys(testGenre);
+
         submit.click();
 
-        // Wait until the table is loaded after clicking the button
-        WebElement loadTable = driver.findElement(By.id("loadtable"));
-        loadTable.click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("videotable")));
+        //Wait for 1 sec
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
         // Check if the video appears in the table
         WebElement table = driver.findElement(By.id("videotable"));
         assertTrue(table.getText().contains(testTitle));
-        assertTrue(table.getText().contains("Test Description"));
-        assertTrue(table.getText().contains("Test Age Rating"));
-        assertTrue(table.getText().contains("Test Genre"));
+        assertTrue(table.getText().contains(testDescription));
+        assertTrue(table.getText().contains(testAgeRating));
+        assertTrue(table.getText().contains(testGenre));
 
         driver.quit();
     }
